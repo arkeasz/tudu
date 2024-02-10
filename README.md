@@ -2,20 +2,13 @@
 
 Tudu allows users to create, manage, and follow up on projects and workflows efficiently. The application focuses on providing an intuitive interface for seamless project tracking.
 
+![tudu preview](./assets/image.png)
+
 ## ⚙️ Technologies Used
 
 - **Backend**: Rust, Axum, Diesel, MySQL
 - **Frontend**: Tauri-RS, Vite, React
 - **Containerization**: Docker
-
-## 📂 Project Structure
-
-```
-Tudu/
-├── client/         # Frontend with Tauri-RS, Vite, React
-├── server/         # Backend with Rust, Axum, Diesel, MySQL
-└── .gitignore      # Git ignore file
-```
 
 ## 🤝 How to Contribute
 
