@@ -1,5 +1,5 @@
-# Server TuDu
----
+# TuDu Server
+
 ## 🚀 Technologies Used
 
 - **Rust** (Backend)
@@ -24,7 +24,7 @@
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/arkeasz/tudu.git
-   cd server
+   cd tudu/server
    ```
 
 2. **Create a `.env` file:**
@@ -48,60 +48,86 @@
 
 ---
 
-## 🌐 Available Endpoints
+## 🌐 API Endpoints
 
 ### `GET /`
-- **Description:** Basic root endpoint.
+- **Description:** Root endpoint to check if the server is running.
 
-### `GET /posts`
-- **Description:** Retrieves a list of the latest 5 published posts.
+### `GET /users`
+- **Description:** Retrieves a list of users.
 - **Response:**
   ```json
   [
     {
       "id": 1,
-      "title": "Post Title",
-      "body": "Post Content",
-      "published": true
+      "username": "john_doe",
+      "email": "john@example.com",
+      "created_at": "2024-01-01T12:00:00Z"
     }
   ]
   ```
 
-### `GET /posts/{id}`
-- **Description:** Retrieves a single post by its ID.
-- **Response (Success):**
+### `POST /register`
+- **Description:** Registers a new user.
+- **Request Body:**
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "securepassword",
+    "username": "john_doe"
+  }
+  ```
+- **Response:**
   ```json
   {
     "id": 1,
-    "title": "Post Title",
-    "body": "Post Content"
+    "email": "john@example.com",
+    "username": "john_doe"
   }
   ```
-- **Response (Not Found):**
+
+### `POST /login`
+- **Description:** Authenticates a user.
+- **Request Body:**
   ```json
   {
-    "message": "Unable to find post {id}"
+    "email": "john@example.com",
+    "password": "securepassword"
+  }
+  ```
+- **Response (Success):**
+  ```json
+  {
+    "message": "Login successful",
+    "token": "your-jwt-token"
+  }
+  ```
+- **Response (Error):**
+  ```json
+  {
+    "error": "Invalid credentials"
   }
   ```
 
----
+### `PUT /users/{id}`
+- **Description:** Updates user information.
+- **Request Body:**
+  ```json
+  {
+    "username": "new_username",
+    "email": "new_email@example.com",
+    "password_hash": "new_hashed_password"
+  }
+  ```
 
-## ⚡ Project Structure
-
-```
-server/
-├── src/
-│   ├── handlers.rs      # API endpoint handlers
-│   ├── lib.rs           # Module declarations and DB connection
-│   ├── main.rs          # Application entry point
-│   ├── models.rs        # Data models for Diesel
-│   └── schema.rs        # Diesel schema
-├── Dockerfile           # Docker configuration
-├── docker-compose.yml   # Docker Compose configuration
-├── .env.example         # Environment variable template
-├── Cargo.toml           # Rust project configuration
-└── wait-for-db.sh       # Script to ensure DB is ready before starting the app
-```
+### `DELETE /users/{id}`
+- **Description:** Deletes a user by ID.
+- **Response:**
+  ```json
+  {
+    "message": "User deleted successfully"
+  }
+  ```
 
 ---
 
