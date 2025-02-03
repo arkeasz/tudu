@@ -1,0 +1,113 @@
+.tudu__dashboard-aside {
+    width: 250px;
+    background-color: #D76C82;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .tudu__dashboard-aside h2 {
+    font-size: 22px;
+  }
+
+  .tudu__dashboard-aside ul {
+    list-style: none;
+  }
+
+  .tudu__dashboard-aside ul li {
+    margin: 10px 0;
+  }
+
+  .tudu__dashboard-aside ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+
+  .tudu__dashboard-aside ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .tudu__dashboard div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tudu__dashboard-nav {
+    background: #EBE8DB;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .tudu__dashboard-nav h1 {
+    font-size: 24px;
+  }
+
+  .tudu__dashboard-nav div {
+    display: flex;
+    gap: 10px;
+  }
+
+  .tudu__dashboard-nav input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .tudu__dashboard-nav button {
+    padding: 8px 12px;
+    background: #D76C82;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .tudu__dashboard-nav button:hover {
+    background: #b9556c;
+  }
+
+  /* === Main Content === */
+  .tudu__dashboard-main {
+    flex: 1;
+    padding: 20px;
+    background: radial-gradient(circle,
+        rgba(255, 11, 141, 0.8) 0%,
+        rgba(255, 0, 64, 0.4) 51%,
+        rgba(255, 0, 64, 0.51) 98%);
+    color: white;
+  }
+
+  .tudu__dashboard-main h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .tudu__dashboard-main  section {
+    display: flex;
+    gap: 20px;
+  }
+
+  .tudu__dashboard-main section div {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+  }
+
+  .tudu__dashboard-main section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
