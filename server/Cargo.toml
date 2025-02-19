@@ -9,4 +9,4 @@ diesel = { version="2.2.7", features= ["mysql"] }
 dotenvy = "0.15.7"
 serde = { version = "1.0.217" }
 serde_json = "1.0.138"
-tokio = "1.43.0"
+tokio = { version = "1.43.0", features = ["full"] }
