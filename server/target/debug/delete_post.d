@@ -1,1 +1,0 @@
-/home/arki/tudu/server/target/debug/delete_post: /home/arki/tudu/server/src/bin/delete_post.rs /home/arki/tudu/server/src/lib.rs /home/arki/tudu/server/src/models.rs /home/arki/tudu/server/src/schema.rs
