@@ -1,0 +1,1 @@
+fn(axum::Json<NewPostRequest>) -> impl Future<Output = (StatusCode, axum::Json<Post>)> {add_post}
