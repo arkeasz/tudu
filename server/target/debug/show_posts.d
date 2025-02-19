@@ -1,0 +1,1 @@
+/home/arki/tudu/server/target/debug/show_posts: /home/arki/tudu/server/src/bin/show_posts.rs /home/arki/tudu/server/src/lib.rs /home/arki/tudu/server/src/models.rs /home/arki/tudu/server/src/schema.rs
