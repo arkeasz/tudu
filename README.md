@@ -1,6 +1,5 @@
 # Tudu
 
---
 Tudu allows users to create, manage, and follow up on projects and workflows efficiently. The application focuses on providing an intuitive interface for seamless project tracking.
 
 ## ⚙️ Technologies Used
