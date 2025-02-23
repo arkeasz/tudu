@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::NaiveDateTime;
 use crate::schema::{calendar_events, comments};
 
 #[derive(Queryable, Identifiable)]

@@ -10,7 +10,7 @@ pub struct Attachment {
     pub document_id: Option<i64>,
     pub file_path: String,
     pub uploaded_by: i64,
-    pub uploaded_at: chrono::NaiveDateTime,
+    pub uploaded_at: NaiveDateTime,
 }
 
 #[derive(Insertable)]
@@ -20,7 +20,7 @@ pub struct NewAttachment {
     pub document_id: Option<i64>,
     pub file_path: String,
     pub uploaded_by: i64,
-    pub uploaded_at: chrono::NaiveDateTime,
+    pub uploaded_at: NaiveDateTime,
 }
 
 #[derive(AsChangeset)]

@@ -87,16 +87,6 @@ diesel::table! {
 }
 
 diesel::table! {
-    posts (id) {
-        id -> Integer,
-        #[max_length = 255]
-        title -> Varchar,
-        body -> Text,
-        published -> Bool,
-    }
-}
-
-diesel::table! {
     projects (id) {
         id -> Bigint,
         #[max_length = 255]
@@ -162,6 +152,8 @@ diesel::table! {
         id -> Bigint,
         #[max_length = 255]
         name -> Varchar,
+        #[max_length = 255]
+        alias -> Nullable<Varchar>,
         description -> Nullable<Text>,
         created_at -> Timestamp,
     }
@@ -223,7 +215,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     document_tags,
     documents,
     notifications,
-    posts,
     projects,
     roles,
     tags,

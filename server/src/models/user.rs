@@ -26,7 +26,7 @@ pub struct NewUser<'a> {
 #[derive(AsChangeset)]
 #[diesel(table_name = users)]
 pub struct UpdateUser<'a> {
-    pub username: &'a str,
-    pub email: &'a str,
-    pub password_hash: &'a str,
+    pub username: Option<&'a str>,
+    pub email: Option<&'a str>,
+    pub password_hash: Option<&'a str>,
 }
