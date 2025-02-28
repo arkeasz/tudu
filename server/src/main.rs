@@ -1,38 +1,50 @@
 use axum::{
-    extract::Path,
-    response::Html,
-    body::Body,
     routing::*,
-    response::Json,
     Router,
+    middleware
 };
-use serde_json::{Value, json};
-use self::models::*;
-use diesel::prelude::*;
+use auth::*;
 use server::*;
 use handlers::{
-    user::*
+    user::*,
+    project::*,
+    teams::*
 };
+use routes::*;
 use tower_http::cors::{Any, CorsLayer};
 use tower::ServiceBuilder;
+use dotenvy::dotenv;
+use std::env;
+use tracing::{info, error};
+use tracing_subscriber::fmt;
 
 #[tokio::main]
 async fn main() {
-
+    // enviroment variables
+    dotenv().ok();
+    fmt::init();
+    let port: String = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let addr = format!("0.0.0.0:{}", port);
     let cors_layer = CorsLayer::new()
-        .allow_origin(Any);
+        .allow_origin(Any)
+        .allow_methods(Any)
+        .allow_headers(Any);
 
     let app = Router::new()
-        .route("/", get(|| async { "Hello, world!" }))
-        .route("/users", get(show_users))
-        .route("/users/create", post(create_user))
-        .route("/users/update/{id}", patch(update_user))
-        .route("/users/delete/{id}", delete(delete_user))
+        .merge(user_routes())
+        .merge(project_routes())
+        .merge(team_routes())
         .layer(ServiceBuilder::new().layer(cors_layer));
+        // .layer(middleware::from_fn(auth_middleware));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080")
-        .await
-        .unwrap();
-
-    axum::serve(listener, app).await.unwrap();
+    // Start server
+    match tokio::net::TcpListener::bind(&addr).await {
+        Ok(listener) => {
+            info!("🚀 Server running on http://{}", addr);
+            if let Err(e) = axum::serve(listener, app).await {
+                error!("server error: {}", e);
+            }
+        }
+        Err(e) => error!("failed to bind server addres {}: {}", addr, e)
+    }
 }
