@@ -1,0 +1,3 @@
+ALTER TABLE projects DROP COLUMN team_id;
+DROP TABLE IF EXISTS team_members;
+DROP TABLE IF EXISTS teams;
