@@ -1,15 +1,5 @@
 // @generated automatically by Diesel CLI.
 
-pub mod sql_types {
-    #[derive(diesel::query_builder::QueryId, Clone, diesel::sql_types::SqlType)]
-    #[diesel(mysql_type(name = "Enum"))]
-    pub struct TasksStatusEnum;
-
-    #[derive(diesel::query_builder::QueryId, Clone, diesel::sql_types::SqlType)]
-    #[diesel(mysql_type(name = "Enum"))]
-    pub struct TeamMembersRoleEnum;
-}
-
 diesel::table! {
     attachments (id) {
         id -> Bigint,
@@ -142,17 +132,14 @@ diesel::table! {
 }
 
 diesel::table! {
-    use diesel::sql_types::*;
-    use super::sql_types::TasksStatusEnum;
-
     tasks (id) {
         id -> Bigint,
         project_id -> Bigint,
         #[max_length = 255]
         name -> Varchar,
         description -> Nullable<Text>,
-        #[max_length = 11]
-        status -> TasksStatusEnum,
+        #[max_length = 20]
+        status -> Varchar,
         assigned_to -> Nullable<Bigint>,
         due_date -> Nullable<Date>,
         created_at -> Timestamp,
@@ -160,15 +147,12 @@ diesel::table! {
 }
 
 diesel::table! {
-    use diesel::sql_types::*;
-    use super::sql_types::TeamMembersRoleEnum;
-
     team_members (id) {
         id -> Bigint,
         team_id -> Bigint,
         user_id -> Bigint,
-        #[max_length = 6]
-        role -> TeamMembersRoleEnum,
+        #[max_length = 20]
+        role -> Varchar,
         joined_at -> Timestamp,
     }
 }
