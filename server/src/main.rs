@@ -21,12 +21,14 @@ async fn main() {
         .allow_origin(Any);
 
     let app = Router::new()
-        .route("/", get("GAAA"))
-        .route("/posts", get(show_posts))
-        .route("/posts/{id}", get(get_post))
+        .route("/", get("text"))
+        // .route("/posts", get(show_posts))
+        // .route("/posts/{id}", get(get_post))
         .layer(ServiceBuilder::new().layer(cors_layer));
+
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080")
         .await
         .unwrap();
+        
     axum::serve(listener, app).await.unwrap();
 }
