@@ -20,7 +20,8 @@ CREATE TABLE tasks (
   project_id BIGINT NOT NULL,
   name VARCHAR(255) NOT NULL,
   description TEXT,
-  status ENUM('pending', 'in_progress', 'completed') NOT NULL,
+  -- pending, in_progress, completed
+  status VARCHAR(20) NOT NULL,
   assigned_to BIGINT,
   due_date DATE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

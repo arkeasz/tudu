@@ -9,7 +9,8 @@ CREATE TABLE team_members (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   team_id BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
-  role ENUM('member', 'admin') NOT NULL,
+  -- member, admin
+  role VARCHAR(20) NOT NULL,
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   UNIQUE (team_id, user_id),
   FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
