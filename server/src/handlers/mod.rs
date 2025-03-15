@@ -1,12 +1,4 @@
-// use crate::models::*;
-// use diesel::prelude::*;
-// use serde_json::{Value, json};
-// use axum::{
-//     extract::Path,
-//     Json
-// };
-// use diesel::sql_types::Json as OtherJson;
-// use crate::establish_connection;
+pub mod user;
 
 // pub async fn show_posts() -> Json<Value> {
 //     use crate::schema::posts::dsl::*;
