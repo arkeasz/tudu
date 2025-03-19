@@ -1,11 +1,14 @@
-use crate::models::{
-    user::*,
-};
+use crate::models::user::*;
 use diesel::result::{DatabaseErrorKind, Error};
 use axum::extract::Path;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
+use rand;
+use argon2::password_hash::rand_core::OsRng;
+use argon2::{password_hash::{SaltString, PasswordHash}, PasswordHasher, PasswordVerifier};
+use argon2::Argon2;
+
 use axum::{
     extract::Json,
     http::StatusCode,
@@ -14,19 +17,39 @@ use axum::{
 use crate::establish_connection;
 
 #[derive(Debug, Deserialize)]
-pub struct NewUserRequest {
+pub struct RegisterRequest {
     email: String,
-    password_hash: String,
+    password: String,
     username: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct LoginRequest {
+    email: String,
+    password: String,
+}
+
+fn hash_password(password: &str) -> String {
+    let salt = SaltString::generate(&mut OsRng); // Usa OsRng en lugar de thread_rng()
+    let argon2 = Argon2::default();
+    argon2.hash_password(password.as_bytes(), &salt)
+        .expect("Failed to hash password")
+        .to_string()
+}
+
+fn verify_password(password: &str, hash: &str) -> bool {
+    let argon2 = Argon2::default();
+    match PasswordHash::new(hash) {
+        Ok(parsed_hash) => argon2.verify_password(password.as_bytes(), &parsed_hash).is_ok(),
+        Err(_) => false,
+    }
+}
 #[derive(Debug, Serialize)]
 pub struct UserResponse {
     id: i64,
     email: String,
     username: String,
 }
-
 
 #[derive(Deserialize)]
 pub struct UpdateUserRequest {
@@ -56,14 +79,14 @@ pub async fn show_users() -> Result<Json<Value>, StatusCode> {
     Ok(Json(json!(jsons)))
 }
 
-pub async fn create_user(Json(payload): Json<NewUserRequest>) -> impl IntoResponse {
+pub async fn register_user(Json(payload): Json<RegisterRequest>) -> impl IntoResponse {
     use crate::schema::users;
-
     let connection = &mut establish_connection();
+    let password_hash = hash_password(&payload.password);
 
     let new_user = NewUser {
         email: &payload.email,
-        password_hash: &payload.password_hash,
+        password_hash: &password_hash,
         username: &payload.username,
     };
 
@@ -114,37 +137,41 @@ pub async fn update_user(
 
     let connection = &mut establish_connection();
 
-    let update_fields = UpdateUser {
-        username: &payload.username.unwrap_or("".to_string()),
-        email: &payload.email.unwrap_or("".to_string()),
-        password_hash: &payload.password_hash.unwrap_or("".to_string()),
+    let update_data = UpdateUser {
+        username: payload.username.as_deref(),
+        email: payload.email.as_deref(),
+        password_hash: payload.password_hash.as_deref(),
     };
 
-    let result = diesel::update(users.find(user_id as i64))
-        .set(&update_fields)
+    let result = diesel::update(users.find(user_id))
+        .set(&update_data)
         .execute(connection);
 
     match result {
         Ok(0) => (
             StatusCode::NOT_FOUND,
-            Json(json!({ "error": "User not found" }))
-        ).into_response(),
+            Json(json!({ "error": "User not found" })),
+        )
+        .into_response(),
 
         Ok(_) => (
             StatusCode::OK,
-            Json(json!({ "message": "User updated successfully" }))
-        ).into_response(),
+            Json(json!({ "message": "User updated successfully" })),
+        )
+        .into_response(),
 
-        Err(Error::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => (
+        Err(diesel::result::Error::DatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _)) => (
             StatusCode::CONFLICT,
-            Json(json!({ "error": "Username already exists" }))
-        ).into_response(),
+            Json(json!({ "error": "Username or email already exists" })),
+        )
+        .into_response(),
 
         Err(e) => {
             eprintln!("Database error: {:?}", e);
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({ "error": format!("Database error: {:?}", e) })))
+                Json(json!({ "error": format!("Database error: {:?}", e) })),
+            )
             .into_response()
         }
     }
@@ -175,5 +202,25 @@ pub async fn delete_user(Path(user_id): Path<i64>) -> impl IntoResponse {
                 Json(json!({ "error": format!("Database error: {:?}", e) })))
             .into_response()
         }
+    }
+}
+
+pub async fn login_user(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
+    use crate::schema::users::dsl::*;
+    let connection = &mut establish_connection();
+
+    let user = users
+        .filter(email.eq(&payload.email))
+        .first::<User>(connection);
+
+    match user {
+        Ok(user) => {
+            if verify_password(&payload.password, &user.password_hash) {
+                (StatusCode::OK, Json("Login successful"))
+            } else {
+                (StatusCode::UNAUTHORIZED, Json("Invalid credentials"))
+            }
+        }
+        Err(_) => (StatusCode::UNAUTHORIZED, Json("Invalid credentials")),
     }
 }

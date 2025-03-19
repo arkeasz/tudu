@@ -13,21 +13,44 @@ use axum::{
 };
 use crate::establish_connection;
 
-pub async fn show_users() -> Result<Json<Value>, StatusCode> {
-    use crate::schema::users::dsl::*;
+#[derive(Debug, Deserialize)]
+pub struct NewProjectRequest {
+    email: String,
+    password_hash: String,
+    username: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ProjectResponse {
+    id: i64,
+    email: String,
+    username: String,
+}
+
+#[derive(Deserialize)]
+pub struct UpdateProjectRequest {
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub password_hash: Option<String>,
+}
+
+pub async fn show_projects() -> Result<Json<Value>, StatusCode> {
+    use crate::schema::projects::dsl::*;
     let connection = &mut establish_connection();
 
-    let results = users
+    let results = projects
         .limit(5)
-        .load::<User>(connection)
+        .load::<Project>(connection)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let jsons: Vec<Value> = results.into_iter().map(|user| {
+    let jsons: Vec<Value> = results.into_iter().map(|pro| {
         json!({
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "created_at": user.created_at
+            "id": pro.id,
+            "name": pro.name,
+            "description": pro.description,
+            "owner_id": pro.owner_id,
+            "created_at": pro.created_at,
+            "team_id": pro.team_id
         })
     }).collect();
 
