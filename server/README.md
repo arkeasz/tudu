@@ -1,5 +1,7 @@
 # TuDu Server
 
+![previw](../assets/mysql.png)
+
 ## 🚀 Technologies Used
 
 - **Rust** (Backend)
